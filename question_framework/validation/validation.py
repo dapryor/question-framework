@@ -16,7 +16,12 @@ def x_hex_character_validation_gen(num_char):
 
 
 def pick_from_choices(*choices):
-    choice_list = set(choices)
+    if len(choices) == 0:
+        raise ValueError("pick_from_choices: Must pass in a non-zero number of choices.")
+    try:
+        choice_list = set(choices)
+    except TypeError:
+        choice_list = set(choices[0])
     return lambda x: x in choice_list
 
 
