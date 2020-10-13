@@ -16,11 +16,11 @@
 ## Basic Usage
 
 ```python
-from question_framework import question as q
-from question_framework import user_input as u
+from question_framework.question import Question, RepeatedQuestion, BranchedQuestion
+from question_framework.user_input import ask
 
-name = q.Question("Name", "Your name:")
-answers = u.ask([name])
+questions = [Question("Name", "Your name:")]
+answers = ask(questions)
 print(answers)
 ```
 
@@ -37,8 +37,8 @@ foobar
 ### Question
 `Question` is basically a question with an answer.
 ```python
-name = q.Question("Name", "Your name:")
-answers = u.ask([name])
+questions = [Question("Name", "Your name:")]
+answers = ask(questions)
 print(answers)
 ```
 
@@ -53,8 +53,8 @@ John Doe
 `RepeatedQuestion` can be used to ask same question consecutively.
 
 ```python
-password = q.RepeatedQuestion("Password", "Your password:", 2)
-answers = u.ask([password])
+questions = [RepeatedQuestion("Password", "Your password:", 2)]
+answers = ask(questions)
 print(answers)
 ```
 
@@ -64,23 +64,25 @@ Your password:
 123
 Your password:
 321
-{'Password': ['123', '321']}
+Your password:
+765
+{'Password': ['123', '321', '765']}
 ```
 
 ### Branched Question
 `BranchedQuestion` can be used to create one way adventures.
 
 ```python
-game = q.BranchedQuestion("Main", "Where to go? [N | E | S | W]", [
-    q.Question("N", "North is cold. You died! (type anything to exit)"),
-    q.Question("E", "You trigerred the trap. (type anything to exit)"),
-    q.BranchedQuestion("S", "You found a tresure chest! [open | leave]", [
-        q.Question("open", "It was a trap! (type anything to exit)"),
-        q.Question("leave", "You leave the cave.. (type anything to exit)"),
+game = [BranchedQuestion("Main", "Where to go? [N | E | S | W]", [
+    Question("N", "North is cold. You died! (type anything to exit)"),
+    Question("E", "You trigerred the trap. (type anything to exit)"),
+    BranchedQuestion("S", "You found a tresure chest! [open | leave]", [
+        Question("open", "It was a trap! (type anything to exit)"),
+        Question("leave", "You leave the cave.. (type anything to exit)"),
     ]),
-    q.Question("W", "West is wild, you died! (type anything to exit)"),
-])
-answers = u.ask([game])
+    Question("W", "West is wild, you died! (type anything to exit)"),
+])]
+answers = ask(game)
 ```
 
 ## Validations
