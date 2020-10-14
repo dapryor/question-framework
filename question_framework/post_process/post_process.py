@@ -19,7 +19,7 @@ def ip_range_to_list(x):
 
 def as_list(ans: str, sep: str = ',', f: Optional[Callable[[str], Any]] = None) -> List[Any]:
     """
-    Parse list elements and and optionally apply a transformer to each element.
+    Parse list elements and optionally apply a transformer to each element.
     This allows you to parse things directly as the type they should be, e.g. integers:
     as_list("3, 4", f=int) == [3, 4]
     """
