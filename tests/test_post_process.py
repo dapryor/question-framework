@@ -47,10 +47,10 @@ def test_as_int_range():
     assert as_int_range("0 - 0") == range(0)
 
     assert as_int_range(":33:3") == range(0, 33, 3)
-    assert as_int_range(":33:") == range(0, 33)
+    assert as_int_range(":33") == range(0, 33)
     assert as_int_range(":33") == range(0, 33)
     assert as_int_range("0:33") == range(0, 33)
-    assert as_int_range("-28:33:") == range(-28, 33)
+    assert as_int_range("-28:33") == range(-28, 33)
 
     assert as_int_range("from 333 to -28") == range(333, -28, -1)
     assert as_int_range("from -333 to -28") == range(-333, -28, 1)
