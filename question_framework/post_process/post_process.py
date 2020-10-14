@@ -63,7 +63,7 @@ def as_int_range(ans: str) -> range:
     Compute an integer range from a string representation. Several options:
     dash notation: 3 - 5 (only positive values)
     python slice notation: <start>?:<end>:<step>?
-    natural language: from '3 to 5' or '-55 to 55'
+    natural language: 'from 3 to 5' or '-55 to 55'
     """
     ans = ans.strip()
     if re.match(r'[0-9]+\s*-\s*[0-9]+', ans):
