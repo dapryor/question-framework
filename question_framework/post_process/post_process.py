@@ -4,6 +4,19 @@ from functools import partial
 import re
 
 
+def ip_range_to_list(x):
+    def ip_range_generator(ip1, ip2):
+        ip1 = int(ip_address(ip1))
+        ip2 = int(ip_address(ip2))
+        ip1, ip2 = min(ip1, ip2), max(ip1, ip2)
+        for i in range(ip1, ip2 + 1):
+            yield ip_address(i)
+
+    ip1, ip2 = x.replace(" ", "").split("-")
+
+    return ip_range_generator(ip1, ip2)
+
+
 def as_list(ans: str, sep: str = ',', f: Optional[Callable[[str], Any]] = None) -> List[Any]:
     """
     Parse list elements and and optionally apply a transformer to each element.
@@ -42,19 +55,6 @@ def mapped_to(*fs: Callable) -> Callable[[str], List[Any]]:
         items = (f(i) for i, f in zip(items, fs))
         return list(items)
     return mapper
-
-
-def ip_range_to_list(x):
-    def ip_range_generator(ip1, ip2):
-        ip1 = int(ip_address(ip1))
-        ip2 = int(ip_address(ip2))
-        ip1, ip2 = min(ip1, ip2), max(ip1, ip2)
-        for i in range(ip1, ip2 + 1):
-            yield ip_address(i)
-
-    ip1, ip2 = x.replace(" ", "").split("-")
-
-    return ip_range_generator(ip1, ip2)
 
 
 def as_int_range(ans: str) -> range:

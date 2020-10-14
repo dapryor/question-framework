@@ -1,5 +1,3 @@
-import sys
-sys.path.append('..')
 from question_framework.post_process import *
 
 
