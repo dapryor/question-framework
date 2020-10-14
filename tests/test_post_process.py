@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 from question_framework.post_process import *
 
 
@@ -57,3 +59,4 @@ if __name__ == "__main__":
     test_as_list()
     test_as_list_of()
     test_as_int_range()
+    test_mapped_to()
