@@ -2,25 +2,29 @@ from ipaddress import ip_address
 from typing import Callable, List, Optional, Any
 from functools import partial
 import re
+import ast
 
 
 # Higher order post processors
 
 def as_list(ans: str, sep: str = ' ', f: Optional[Callable[[str], ...]] = None) -> List[Any]:
-    items = ans.split(sep)
+    items = ans.strip().split(sep)
     if f is not None:
         items = list(map(f, items))
     return items
 
 
-def as_list_of(type: type) -> Callable[[str], List[Any]]:
+def as_list_of(f: Callable) -> Callable[[str], List[Any]]:
     def lister(ans: str) -> List[Any]:
-        return as_list(ans, f=type)
+        return as_list(ans, f=f)
     return lister
 
 
-as_ints = partial(as_list_of, int)
-as_floats = partial(as_list_of, float)
+as_ints = as_list_of(int)
+as_floats = as_list_of(float)
+
+# Parse basic Python structures; lists, tuples, dicts
+as_struct = as_list_of(ast.literal_eval)
 
 
 def as_int_range(ans: str) -> range:
