@@ -1,1 +1,1 @@
-from .post_process import *
+from question_framework.post_process.post_process import *

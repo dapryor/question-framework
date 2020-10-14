@@ -1,3 +1,3 @@
 def ask(questions: list):
-    answerDicts = map(lambda q: q.ask(), questions)
-    return {k: v for a in answerDicts for k, v in a.items()}
+    answer_dicts = map(lambda q: q.ask(), questions)
+    return {k: v for a in answer_dicts for k, v in a.items()}

@@ -1,1 +1,1 @@
-from .question import *
+from question_framework.question.question import *
