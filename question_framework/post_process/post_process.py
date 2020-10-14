@@ -5,44 +5,46 @@ import re
 import ast
 
 
-# Higher order post processors
-
-def as_list(ans: str, sep: str = ' ', f: Optional[Callable[[str], ...]] = None) -> List[Any]:
+def as_list(ans: str, sep: str = ',', f: Optional[Callable[[str], Any]] = None) -> List[Any]:
+    """
+    Parse list elements and and optionally apply a transformer to each element.
+    This allows you to parse things directly as the type they should be, e.g. integers:
+    as_list("3, 4", f=int) == [3, 4]
+    """
     items = ans.strip().split(sep)
+    items = map(str.strip, items)
     if f is not None:
-        items = list(map(f, items))
-    return items
+        items = map(f, items)
+    return list(items)
 
 
 def as_list_of(f: Callable) -> Callable[[str], List[Any]]:
-    def lister(ans: str) -> List[Any]:
-        return as_list(ans, f=f)
-    return lister
+    """
+    A helper function to build as_list alternatives on the spot.
+    as_ints = as_list_of(int)
+    as_ints("3, 4") == [3, 4]
+    """
+    return partial(as_list, f=f)
 
 
 as_ints = as_list_of(int)
 as_floats = as_list_of(float)
 
-# Parse basic Python structures; lists, tuples, dicts
-as_struct = as_list_of(ast.literal_eval)
+
+def mapped_to(*fs: Callable) -> Callable[[str], List[Any]]:
+    """
+    Apply a given function to the item found at a given index.
+    as_mapping(int, float)("3, 3.5") == [3, 3.5]
+    Both lists need to have the same length.
+    """
+    def mapper(ans: str, **kw):
+        items = as_list(ans)
+        assert len(items) == len(fs), 'Key & Input lists have mismatched lengths'
+        items = (f(i) for i, f in zip(items, fs))
+        return list(items)
+    return mapper
 
 
-def as_int_range(ans: str) -> range:
-    ans = ans.strip()
-    if re.match(r'[0-9]+-[0-9]+', ans):
-        start, end = ans.split('-')
-        return range(int(start), int(end))
-    if ':' in ans:
-        start, end, *step = ans.split(':')
-        start = int(start or 0)
-        step = int(step or 1)
-        return range(start, int(end), step)
-    if re.match(r'from\s+-?[0-9]+\s+to\s+-?[0-9]+', ans):
-        _, start, _, end = ans.split()
-        return range(int(start), int(end))
-    raise ValueError(f'Could not transform {ans!r} into an integer range')
-
-    
 def ip_range_to_list(x):
     def ip_range_generator(ip1, ip2):
         ip1 = int(ip_address(ip1))
@@ -54,3 +56,30 @@ def ip_range_to_list(x):
     ip1, ip2 = x.replace(" ", "").split("-")
 
     return ip_range_generator(ip1, ip2)
+
+
+def as_int_range(ans: str) -> range:
+    """
+    Compute an integer range from a string representation. Several options:
+    dash notation: 3 - 5 (only positive values)
+    python slice notation: <start>?:<end>:<step>?
+    natural language: from '3 to 5' or '-55 to 55'
+    """
+    ans = ans.strip()
+    if re.match(r'[0-9]+\s*-\s*[0-9]+', ans):
+        start, end = ans.split('-')
+        start = start.strip()
+        end = end.strip()
+        return range(int(start), int(end))
+    if ':' in ans:
+        start, end, *step = ans.split(':')
+        start = int(start or 0)
+        step = int(step and step[0] or 1)
+        return range(start, int(end), step)
+    if re.match(r'(from\s)?\s*-?[0-9]+\s+to\s+-?[0-9]+', ans, flags=re.IGNORECASE):
+        *_, start, _, end = ans.split()
+        start = int(start)
+        end = int(end)
+        step = 1 if end >= start else -1
+        return range(start, end, step)
+    raise ValueError(f'Could not transform {ans!r} into an integer range')
