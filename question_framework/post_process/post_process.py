@@ -2,7 +2,6 @@ from ipaddress import ip_address
 from typing import Callable, List, Optional, Any
 from functools import partial
 import re
-import ast
 
 
 def as_list(ans: str, sep: str = ',', f: Optional[Callable[[str], Any]] = None) -> List[Any]:
