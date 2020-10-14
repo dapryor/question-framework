@@ -1,5 +1,3 @@
-import sys
-sys.path.append('..')
 from question_framework.post_process import *
 
 
@@ -27,6 +25,11 @@ def test_mapped_to():
 
     assert mapped_to(int, float, str)("34, 34.5, jon") == [34, 34.5, "jon"]
 
+    try:
+        mapped_to(int, float)("34, 34, 34")
+    except ValueError as ve:
+        assert str(ve).endswith('mismatched lengths')
+
     class IntValue(Value):
         def __init__(self, value): super().__init__(int(value))
     class FloatValue(Value):
@@ -53,10 +56,3 @@ def test_as_int_range():
     assert as_int_range("from -333 to -28") == range(-333, -28, 1)
     assert as_int_range("from -333 to 28") == range(-333, 28, 1)
     assert as_int_range("333 to 2833") == range(333, 2833, 1)
-
-
-if __name__ == "__main__":
-    test_as_list()
-    test_as_list_of()
-    test_as_int_range()
-    test_mapped_to()

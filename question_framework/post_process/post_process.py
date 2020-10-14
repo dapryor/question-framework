@@ -51,7 +51,8 @@ def mapped_to(*fs: Callable) -> Callable[[str], List[Any]]:
     """
     def mapper(ans: str, **kw):
         items = as_list(ans)
-        assert len(items) == len(fs), 'Key & Input lists have mismatched lengths'
+        if len(items) != len(fs):
+            raise ValueError('Key & Input lists have mismatched lengths')
         items = (f(i) for i, f in zip(items, fs))
         return list(items)
     return mapper
