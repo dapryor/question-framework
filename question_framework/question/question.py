@@ -1,5 +1,6 @@
-from question_framework.validation import isint, pick_from_choices
 import logging
+
+from question_framework.validation import pick_from_choices
 
 logger = logging.getLogger("question_framework")
 
@@ -21,6 +22,7 @@ class Question():
         return self.post_process(answer)
 
     def ask(self):
+        logger.debug(f"Question: {self.name}")
         return {self.name: self.get_answer()}
 
 
@@ -30,7 +32,7 @@ class RepeatedQuestion(Question):
         self.ask_count = ask_count
 
     def ask(self):
-        logger.debug(f"DEBUG: REPEAT Question: {self.name}")
+        logger.debug(f"REPEAT Question: {self.name}")
         return {self.name: list(map(lambda q: q.get_answer(), [self] * self.ask_count))}
 
 
@@ -42,7 +44,7 @@ class BranchedQuestion(Question):
         self.question_branches = question_dict
 
     def ask(self):
-        logger.debug(f"DEBUG: BRANCH Question: {self.name}")
+        logger.debug(f"BRANCH Question: {self.name}")
         ret = dict()
         branch_answer = self.get_answer()
         ret[self.name] = self.question_branches[branch_answer].ask()
