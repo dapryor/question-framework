@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="200px" src="assets/logo.png">
+  <img height="200px" src="https://raw.githubusercontent.com/dapryor/question-framework/master/assets/logo.png">
 </p>
 <p align="center">
        <b>Question Framework helps you to ask questions and get answers in a declarative way!</b>
