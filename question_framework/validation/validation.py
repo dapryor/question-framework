@@ -1,6 +1,8 @@
 import ipaddress
 import re
 from types import FunctionType
+from typing import Callable, List, Optional, Any
+from functools import partial
 
 
 def is_ip_check(ip: str) -> bool:
@@ -47,9 +49,23 @@ def yes_or_no(x: str) -> bool:
     return pick_from_choices("y", "n")(x)
 
 
-def is_int(x: str) -> bool:
-    return x.isdigit()
+def is_of_type(t: type) -> FunctionType:
+    """
+    Helper function to build is_type 
+    """
 
+    def type_validator(x: str) -> bool:
+        try:
+            t(x)
+            return True
+        except ValueError:
+            return False
+
+    return type_validator
+
+is_int = is_of_type(int)
+is_float = is_of_type(float)
+is_complex = is_of_type(complex)
 
 def ip_range(x: str) -> bool:
     split_ips = x.replace(" ", "").split("-")

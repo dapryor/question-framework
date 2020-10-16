@@ -9,7 +9,7 @@ class Question():
     def __init__(self, name, text, validation=lambda x: x is not None, post_process=lambda x: x):
         self.name = name
         self.text = text
-        self.verification = validation
+        self.validation = validation
         self.post_process = post_process
 
     def __hash__(self):
@@ -17,7 +17,7 @@ class Question():
 
     def get_answer(self):
         answer = None
-        while answer is None or not self.verification(answer):
+        while answer is None or not self.validation(answer):
             answer = input(self.text + "\n")
         return self.post_process(answer)
 
