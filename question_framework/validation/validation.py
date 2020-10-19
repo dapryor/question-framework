@@ -21,7 +21,7 @@ def x_hex_character_validation_gen(num_char: int) -> FunctionType:
     elif num_char < 0:
         raise TypeError("Expecting positive integer input")
     else:
-        num_char = "{{{0}}}.format(num_char)"
+        num_char = "{{{0}}}".format(num_char)
 
     regex_str = "^[a-fA-F0-9]{}$".format(num_char)
     return regex_match(regex_str)
