@@ -1,7 +1,10 @@
 import string
 from random import choices
+from types import FunctionType
+
 import pytest
 from delayed_assert import expect, assert_expectations
+
 from question_framework.validation import *
 
 hex_list = list(string.hexdigits)
@@ -93,6 +96,7 @@ class TestXHexCharacterValidationGen:
         with pytest.raises(TypeError, match="Expecting positive integer input"):
             x_hex_character_validation_gen(-2)
 
+
 class TestIsOfType:
 
     def test_is_int(self):
@@ -126,4 +130,40 @@ class TestIsOfType:
         expect(is_bool("-10.20") is True)
         expect(is_bool("a") is True)
         expect(is_bool("*(sjehv") is True)
+        assert_expectations()
+
+
+class TestPickFromChoices:
+    def test_returns_function(self):
+        actual = pick_from_choices("a")
+        assert type(actual) == FunctionType
+
+    def test_pick_from_choices_bad_input_with_message(self):
+        with pytest.raises(ValueError):
+            pick_from_choices()
+
+    def test_pick_from_choices_bad_choice_with_message(self):
+        inputs = [1, 2, 3, "a", "b", "c"]
+        fn = pick_from_choices(*inputs, with_message=True)
+
+        with pytest.raises(ValidationError):
+            fn("F")
+
+    def test_pick_from_choices_bad_choice_with_out_message(self):
+        inputs = [1, 2, 3, "a", "b", "c"]
+        fn = pick_from_choices(*inputs)
+
+        expected = False
+        actual = fn("F")
+        assert actual is expected
+
+    def test_pick_from_choices_mixed_types(self):
+        inputs = [1, 2, 3, "a", "b", "c"]
+        fn = pick_from_choices(*inputs)
+        expected = True
+
+        for i in inputs:
+            actual = fn(i)
+            expect(actual is expected, f"In: {i}")
+
         assert_expectations()

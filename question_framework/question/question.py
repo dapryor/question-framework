@@ -1,11 +1,11 @@
 import logging
 
-from question_framework.validation import pick_from_choices
+from question_framework.validation import pick_from_choices, ValidationError
 
 logger = logging.getLogger("question_framework")
 
 
-class Question():
+class Question:
     def __init__(self, name, text, validation=lambda x: x is not None, post_process=lambda x: x):
         self.name = name
         self.text = text
@@ -16,9 +16,18 @@ class Question():
         return hash(self.name)
 
     def get_answer(self):
-        answer = None
-        while answer is None or not self.validation(answer):
+        while True:
             answer = input(self.text + "\n")
+            try:
+                valid = self.validation(answer)
+            except ValidationError as err:
+                # TODO: Allow an end user to output somewhere other than stdout
+                print(err)
+                continue
+
+            if valid is True:
+                break
+
         return self.post_process(answer)
 
     def ask(self):
