@@ -26,6 +26,16 @@ class Question():
         return {self.name: self.get_answer()}
 
 
+class StaticAnswer(Question):
+
+    def __init__(self, name, text):
+        self.name = name
+        self.text = text
+
+    def get_answer(self):
+        return self.text
+
+
 class RepeatedQuestion(Question):
     def __init__(self, name, text, ask_count, validation=lambda x: x is not None, post_process=lambda x: x):
         super(RepeatedQuestion, self).__init__(name, text, validation=validation, post_process=post_process)
