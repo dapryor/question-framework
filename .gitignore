@@ -2,3 +2,7 @@ __pycache__/
 build/
 *egg-info/
 .idea/
+.pypirc
+dist/
+build/
+.pytest_cache/
