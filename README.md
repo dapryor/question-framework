@@ -85,11 +85,59 @@ game = [BranchedQuestion("Main", "Where to go? [N | E | S | W]", [
 answers = ask(game)
 ```
 
+### Static Answers
+"StaticAnswer" can be used to provide a default value.
+
+```python
+from question_framework.question import BranchedQuestion, StaticAnswer, Question
+questions = [BranchedQuestion("password", "Do you want to enter a password? [y|n]", [
+    Question("y", "What is your password?"),
+    StaticAnswer("n", "No password.")
+])]
+answers = ask(questions)
+```
+
+Output:
+```bash
+Do you want to enter a password? [y|n]
+n
+{'password': {'n': 'No password.', '__answer': 'n'}}
+```
+
+
 ## Validations
 
 A validation function can be specified to validate answers. If validation fails, user will be asked to enter the input again.
 ```python
 Question("Password", "Enter password:", validation=lambda x: len(x) > 5)
+```
+
+### Validation Error Messages
+
+When a user provides input that does not satify a validation function, it may be desireable to give them a message.  The ValidationError exception allows this.
+
+To use, raise the ValidationError exception from your validation function with your desired message.
+```python
+from question_framework.question import Question
+from question_framework.user_input import ask
+from question_framework.validation import ValidationError
+
+def is_not_blank(x):
+    if not x:
+        raise ValidationError("Your answer may not be blank.")
+    return True
+    
+questions = [Question("Name", "Your name:", validation=is_not_blank)]
+answers = ask(questions)
+```
+
+Output:
+```bash
+Your name:
+Your answer may not be blank.
+Your name:
+David
+{'Name': 'David'}
 ```
 
 ## Post process
