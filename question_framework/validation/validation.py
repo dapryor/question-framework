@@ -31,7 +31,8 @@ def x_hex_character_validation_gen(num_char: int) -> Callable[[str], bool]:
 
 def pick_from_choices(*choices, with_message=False) -> Callable[[str], bool]:
     if len(choices) == 0:
-        raise ValueError("pick_from_choices: Must pass in a non-zero number of choices.")
+        raise ValueError(
+            "pick_from_choices: Must pass in a non-zero number of choices.")
     try:
         choice_list = set(choices)
     except TypeError:

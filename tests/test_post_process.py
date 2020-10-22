@@ -20,6 +20,7 @@ class TestAsList:
         expect(as_list("3 , 4 ") == ["3", "4"])
         assert_expectations()
 
+
 class TestAsListOf:
     def test_as_list_of(self):
         expect(as_list_of(int)("3, 4") == [3, 4])
@@ -27,9 +28,11 @@ class TestAsListOf:
         expect(as_list_of(Value)("33, allo") == [Value("33"), Value("allo")])
         assert_expectations()
 
+
 class TestMappedTo:
     def test_mapped_to(self):
-        expect(mapped_to(int, float, str)("34, 34.5, jon") == [34, 34.5, "jon"])
+        expect(mapped_to(int, float, str)(
+            "34, 34.5, jon") == [34, 34.5, "jon"])
 
         with pytest.raises(ValueError, match=".*mismatched lengths"):
             mapped_to(int, float)("34, 34, 34")
@@ -47,6 +50,7 @@ class TestMappedTo:
                 "jon"
             ])
         assert_expectations()
+
 
 class TestAsIntRange:
     def test_as_int_range(self):
