@@ -9,7 +9,7 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setuptools.setup(
-    name="question_framework", # Replace with your own username
+    name="question_framework",  # Replace with your own username
     version="0.2.0",
     author="David Pryor",
     author_email="dapryor@cisco.com",
