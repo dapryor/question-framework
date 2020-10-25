@@ -13,27 +13,27 @@ not_hex_list = list(set(string.printable) - set(hex_list))
 
 class TestIsIPCheck:
     def test_returns_bool(self):
-        good = is_ip_check("1.1.1.1")
-        bad = is_ip_check("abcdefg")
+        good = is_ip("1.1.1.1")
+        bad = is_ip("abcdefg")
         expect(type(good) == bool)
         expect(type(bad) == bool)
         assert_expectations()
 
-    def test_is_ip_check(self):
+    def test_is_ip(self):
         ip = "192.1.1.1"
-        actual = is_ip_check(ip)
+        actual = is_ip(ip)
         expected = True
         assert actual is expected
 
     def test_is_not_ip_check(self):
         ip = "Steve"
-        actual = is_ip_check(ip)
+        actual = is_ip(ip)
         expected = False
         assert actual is expected
 
     def test_is_almost_an_ip_check(self):
         ip = "257.1.1.1"
-        actual = is_ip_check(ip)
+        actual = is_ip(ip)
         expected = False
         assert actual is expected
 
