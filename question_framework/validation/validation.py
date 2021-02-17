@@ -7,12 +7,20 @@ class ValidationError(Exception):
     pass
 
 
-def is_ip_check(ip: str) -> bool:
+def is_ip(ip: str) -> bool:
     try:
         ipaddress.ip_address(str(ip))
         return True
     except ValueError:
         return False
+
+
+def is_ip_range(x: str) -> bool:
+    split_ips = x.replace(" ", "").split("-")
+    if len(split_ips) != 2:
+        return False
+    ip1, ip2 = split_ips
+    return is_ip(ip1) and is_ip(ip2)
 
 
 def x_hex_character_validation_gen(num_char: int) -> Callable[[str], bool]:
@@ -44,11 +52,17 @@ def pick_from_choices(*choices, with_message=False) -> Callable[[str], bool]:
             return True
         else:
             if with_message:
-                raise ValidationError(f"Invalid Choice: {x!r}. Pick one of the following {choice_list}")
+                raise ValidationError(
+                    f"Invalid Choice: {x!r}. Pick one of the following {choice_list}")
             else:
                 return False
 
     return in_list
+
+
+def yes_or_no(x: str) -> bool:
+    x = x.lower()
+    return pick_from_choices("y", "n")(x)
 
 
 def regex_match(expression: str) -> Callable[[str], bool]:
@@ -58,14 +72,9 @@ def regex_match(expression: str) -> Callable[[str], bool]:
     return match_fn
 
 
-def yes_or_no(x: str) -> bool:
-    x = x.lower()
-    return pick_from_choices("y", "n")(x)
-
-
 def is_of_type(t: type) -> Callable[[str], bool]:
     """
-    Helper function to build is_type 
+    Builds is_type validators
     """
 
     def type_validator(x: str) -> bool:
@@ -81,11 +90,3 @@ def is_of_type(t: type) -> Callable[[str], bool]:
 is_int = is_of_type(int)
 is_float = is_of_type(float)
 is_complex = is_of_type(complex)
-
-
-def ip_range(x: str) -> bool:
-    split_ips = x.replace(" ", "").split("-")
-    if len(split_ips) != 2:
-        return False
-    ip1, ip2 = split_ips
-    return is_ip_check(ip1) and is_ip_check(ip2)

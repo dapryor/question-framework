@@ -5,6 +5,7 @@ import re
 
 
 def ip_range_to_list(x):
+
     def ip_range_generator(ip1, ip2):
         ip1 = int(ip_address(ip1))
         ip2 = int(ip_address(ip2))
@@ -17,54 +18,59 @@ def ip_range_to_list(x):
     return ip_range_generator(ip1, ip2)
 
 
-def as_list(ans: str, sep: str = ',', f: Optional[Callable[[str], Any]] = None) -> List[Any]:
+def as_list(ans: str, sep: str = ",") -> List[str]:
     """
-    Parse list elements and optionally apply a transformer to each element.
-    This allows you to parse things directly as the type they should be, e.g. integers:
-    as_list("3, 4", f=int) == [3, 4]
+    Spits answer into list according to separator
     """
+
     items = ans.strip().split(sep)
     items = map(str.strip, items)
-    if f is not None:
-        items = map(f, items)
+
     return list(items)
 
 
-def as_list_of(f: Callable) -> Callable[[str], List[Any]]:
+def as_list_of(f: Callable, sep: str = ",") -> Callable[[str, str], List[Any]]:
     """
-    A helper function to build as_list alternatives on the spot.
-    as_ints = as_list_of(int)
-    as_ints("3, 4") == [3, 4]
+    Builds post-processor for splitting answer into list and casting to a type
     """
-    return partial(as_list, f=f)
+
+    def type_caster(ans: str) -> List[Any]:
+        items = as_list(ans, sep)
+        if f is not None:
+            items = map(f, items)
+
+        return list(items)
+
+    return type_caster
 
 
+as_strs = as_list_of(str)
 as_ints = as_list_of(int)
 as_floats = as_list_of(float)
 
 
-def mapped_to(*fs: Callable) -> Callable[[str], List[Any]]:
+def mapped_to(*fs: Callable, sep: str = ",") -> Callable[[str], List[Any]]:
     """
-    Apply a given function to the item found at a given index.
-    as_mapping(int, float)("3, 3.5") == [3, 3.5]
-    Both lists need to have the same length.
+    Builds post-processing for mapping list-like answers to a list of post-processing functions
     """
-    def mapper(ans: str, **kw):
-        items = as_list(ans)
+
+    def mapper(ans: str, **kw) -> List[Any]:
+        items = as_list(ans, sep)
         if len(items) != len(fs):
             raise ValueError('Key & Input lists have mismatched lengths')
-        items = (f(i) for i, f in zip(items, fs))
-        return list(items)
+        return [f(i) for i, f in zip(items, fs)]
+
     return mapper
 
 
 def as_int_range(ans: str) -> range:
     """
     Compute an integer range from a string representation. Several options:
-    dash notation: 3 - 5 (only positive values)
-    python slice notation: :3 (start implied to be 0), 3:4 (normal), 3:55:2 (with step)
-    natural language: 'from 3 to 5' or '-55 to 55'
+        1. dash notation: 3 - 5 (only positive values)
+        2. python slice notation: :3 (start implied to be 0), 3:4 (normal), 3:55:2 (with step)
+        3. natural language: 'from 3 to 5' or '-55 to 55'
     """
+
     ans = ans.strip()
     if re.match(r'^\s*\d+\s*-\s*\d+$', ans):
         start, end = ans.split('-')
