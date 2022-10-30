@@ -1,6 +1,6 @@
 import logging
 
-from question_framework.validation import pick_from_choices, ValidationError
+from question_framework.validation import ValidationError, pick_from_choices
 
 logger = logging.getLogger("question_framework")
 
@@ -46,8 +46,7 @@ class StaticAnswer(Question):
 
 class RepeatedQuestion(Question):
     def __init__(self, name, text, ask_count, validation=lambda x: x is not None, post_process=lambda x: x):
-        super(RepeatedQuestion, self).__init__(name, text,
-                                               validation=validation, post_process=post_process)
+        super(RepeatedQuestion, self).__init__(name, text, validation=validation, post_process=post_process)
         self.ask_count = ask_count
 
     def ask(self):
