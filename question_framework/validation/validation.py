@@ -1,6 +1,6 @@
 import ipaddress
 import re
-from typing import Callable
+from typing import Any, Callable
 
 
 class ValidationError(Exception):
@@ -24,20 +24,21 @@ def is_ip_range(x: str) -> bool:
 
 
 def x_hex_character_validation_gen(num_char: int) -> Callable[[str], bool]:
+    regex_quantifier: str = ""
     if not isinstance(num_char, int):
         raise TypeError("Expecting input of type int")
     if num_char == -1:
-        num_char = "+"
+        regex_quantifier = "+"
     elif num_char < 0:
         raise TypeError("Expecting positive integer input")
     else:
-        num_char = f"{{{num_char}}}"
+        regex_quantifier = f"{{{num_char}}}"
 
-    regex_str = f"^[a-fA-F0-9]{num_char}$"
+    regex_str = f"^[a-fA-F0-9]{regex_quantifier}$"
     return regex_match(regex_str)
 
 
-def pick_from_choices(*choices, with_message=False) -> Callable[[str], bool]:
+def pick_from_choices(*choices: Any, with_message: bool = False) -> Callable[[str], bool]:
     if len(choices) == 0:
         raise ValueError("pick_from_choices: Must pass in a non-zero number of choices.")
     try:
