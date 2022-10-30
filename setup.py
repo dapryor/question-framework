@@ -1,6 +1,6 @@
 import pathlib
-import setuptools
 
+import setuptools
 
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
@@ -23,5 +23,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
 )

@@ -1,11 +1,10 @@
-from ipaddress import ip_address
-from typing import Callable, List, Optional, Any
-from functools import partial
 import re
+from functools import partial
+from ipaddress import ip_address
+from typing import Any, Callable, List, Optional
 
 
 def ip_range_to_list(x):
-
     def ip_range_generator(ip1, ip2):
         ip1 = int(ip_address(ip1))
         ip2 = int(ip_address(ip2))
@@ -57,7 +56,7 @@ def mapped_to(*fs: Callable, sep: str = ",") -> Callable[[str], List[Any]]:
     def mapper(ans: str, **kw) -> List[Any]:
         items = as_list(ans, sep)
         if len(items) != len(fs):
-            raise ValueError('Key & Input lists have mismatched lengths')
+            raise ValueError("Key & Input lists have mismatched lengths")
         return [f(i) for i, f in zip(items, fs)]
 
     return mapper
@@ -72,20 +71,20 @@ def as_int_range(ans: str) -> range:
     """
 
     ans = ans.strip()
-    if re.match(r'^\s*\d+\s*-\s*\d+$', ans):
-        start, end = ans.split('-')
+    if re.match(r"^\s*\d+\s*-\s*\d+$", ans):
+        start, end = ans.split("-")
         start = start.strip()
         end = end.strip()
         return range(int(start), int(end))
-    if re.match(r'^(-?\d+)?:-?\d+(:-?\d+)?$', ans):
-        start, end, *step = ans.split(':')
+    if re.match(r"^(-?\d+)?:-?\d+(:-?\d+)?$", ans):
+        start, end, *step = ans.split(":")
         start = int(start or 0)
         step = int(step and step[0] or 1)
         return range(start, int(end), step)
-    if re.match(r'^(from\s)?\s*-?\d+\s+to\s+-?\d+$', ans, flags=re.IGNORECASE):
+    if re.match(r"^(from\s)?\s*-?\d+\s+to\s+-?\d+$", ans, flags=re.IGNORECASE):
         *_, start, _, end = ans.split()
         start = int(start)
         end = int(end)
         step = 1 if end >= start else -1
         return range(start, end, step)
-    raise ValueError(f'Could not transform {ans!r} into an integer range')
+    raise ValueError(f"Could not transform {ans!r} into an integer range")
