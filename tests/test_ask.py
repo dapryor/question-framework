@@ -22,7 +22,7 @@ class TestAsk():
         with mock.patch("builtins.input", lambda x: 'foobar'):
             questions = [Question("Name", "Your name:")]
             answers = ask(questions)
-            assert(answers == {"Name": "foobar"})
+            assert (answers == {"Name": "foobar"})
 
     def test_doc_example_2(self):
 
@@ -32,7 +32,7 @@ class TestAsk():
         with mock.patch("builtins.input", repeat_input):
             questions = [RepeatedQuestion("Password", "Your password:", 3)]
             answers = ask(questions)
-            assert(answers == {'Password': ['321', '123', '765']})
+            assert (answers == {'Password': ['321', '123', '765']})
 
     def test_static_answer_1(self, static_test_questions):
 
@@ -44,7 +44,7 @@ class TestAsk():
 
         with mock.patch("builtins.input", answer_bank):
             answers = ask(static_test_questions)
-            assert(answers == {"password?": {"__answer": "y", "y": "123"}})
+            assert (answers == {"password?": {"__answer": "y", "y": "123"}})
 
     def test_static_answer_2(self, static_test_questions):
 
@@ -55,5 +55,5 @@ class TestAsk():
 
         with mock.patch("builtins.input", answer_bank):
             answers = ask(static_test_questions)
-            assert(answers == {"password?": {
-                   "__answer": "n", "n": "They said no."}})
+            assert (answers == {"password?": {
+                "__answer": "n", "n": "They said no."}})
