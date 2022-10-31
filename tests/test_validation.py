@@ -167,3 +167,25 @@ class TestPickFromChoices:
             expect(actual is expected, f"In: {i}")
 
         assert_expectations()
+
+    def test_yes_or_no(self):
+        inputs = ["y", "Y", "n", "N"]
+        expected = True
+
+        for i in inputs:
+            actual = yes_or_no(i)
+            expect(actual is expected)
+
+        assert_expectations()
+
+    def test_yes_or_no_with_other_letters(self):
+        letters = list(string.ascii_lowercase) + list(string.ascii_uppercase)
+        validInputs = ["y", "Y", "n", "N"]
+        invalidInputs = filter(lambda x: x not in validInputs, letters)
+        expected = False
+
+        for i in invalidInputs:
+            actual = yes_or_no(i)
+            expect(actual is expected)
+
+        assert_expectations()
