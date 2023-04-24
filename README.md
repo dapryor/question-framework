@@ -57,7 +57,7 @@ John Doe
 `RepeatedQuestion` can be used to ask same question consecutively.
 
 ```python
-questions = [RepeatedQuestion("Password", "Your password:", 2)]
+questions = [RepeatedQuestion("Password", "Your password:", 3)]
 answers = ask(questions)
 print(answers)
 ```
